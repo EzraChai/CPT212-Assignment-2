@@ -1,16 +1,30 @@
+/*
+ * Boyer-Moore String Matching Algorithm
+ * Uses:
+ * 1. Bad Character Heuristic
+ * 2. Good Suffix Heuristic
+ * Shift = max(Bad Character Shift, Good Suffix Shift)
+ */
+
 public class bm {
     static int ALPHABET = 256;
 
+    // Algorithm: BuildBadChar(pattern)
     private static int[] buildBadChar(String pattern) {
         int m = pattern.length();
         int[] badChar = new int[ALPHABET];
+
+        // Initialize all characters as not present
         for (int i = 0; i < ALPHABET; i++)
             badChar[i] = -1;
+
+        // Store last occurrence of each character
         for (int i = 0; i < m; i++)
             badChar[(int) pattern.charAt(i)] = i;
         return badChar;
     }
 
+    // Algorithm: BuildGoodSuffix(pattern)
     // Suffix array for good suffix table
     private static int[] computeSuffix(String pattern) {
         int m = pattern.length();
@@ -60,6 +74,7 @@ public class bm {
         return goodSuffix;
     }
 
+    // Algorithm: SearchBM(text, pattern)
     public static void search(String text, String pattern) {
         int n = text.length();
         int m = pattern.length();
@@ -76,14 +91,18 @@ public class bm {
             while (j >= 0 && pattern.charAt(j) == text.charAt(s + j))
                 j--;
 
+            // Pattern found
             if (j < 0) {
-                // Pattern found
                 System.out.println("Pattern found at index " + s);
                 return; // single match — stop after first occurrence
             } else {
-                // Mismatch — take the greater of the two shifts
+                // Calculate shift using Bad Character heuristic
                 int bcShift = j - badChar[(int) text.charAt(s + j)];
+
+                // Calculate shift using Good Suffix heuristic
                 int gsShift = goodSuffix[j];
+
+                // Use the larger shift value
                 int moveBy = Math.max(bcShift, gsShift);
                 s += moveBy;
             }
