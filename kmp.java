@@ -1,4 +1,12 @@
+/*
+ * Knuth-Morris-Pratt (KMP) String Matching Algorithm
+ * Uses Failure Function (LPS table) to avoid rechecking characters
+ * Time Complexity: O(n + m)
+ */
+
 public class kmp {
+
+    // Algorithm: Failure(pattern)
     private static int[] Failure(char[] pattern) {
         int m = pattern.length;
         int[] fail = new int[m]; // all overlaps initialized to zero
@@ -18,6 +26,7 @@ public class kmp {
         return fail;
     }
 
+    // Algorithm: FindKMP(text, pattern)
     public static int findKMP(char[] text, char[] pattern) {
         int n = text.length;
         int m = pattern.length;
